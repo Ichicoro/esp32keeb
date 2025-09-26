@@ -2,6 +2,13 @@
   import { KEYCODES, MOUSE_KEYS } from "./keycodes";
   import { usePointerlock } from "@terrygonguet/svelte-pointerlock";
 
+  const timeStringSettings = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  } as Intl.DateTimeFormatOptions;
+
   const {
     exit: exitPointerlock,
     pointerlock,
@@ -13,7 +20,10 @@
   let output = $state("");
 
   const logToOutput = (text: string) => {
-    output = text + "\n" + output;
+    output =
+      `[${new Date().toLocaleTimeString("en", timeStringSettings)}] ${text}` +
+      "\n" +
+      output;
   };
 
   $effect(() => {
@@ -80,7 +90,11 @@
   };
 
   const lockKeyboard = async () => {
-    if (supportsLock && connStatus === "connected") {
+    if (supportsLock) {
+      if (connStatus !== "connected") {
+        logToOutput("Connect to a serial port first.\n");
+        return;
+      }
       try {
         if (mouselockOn) {
           enterPointerlock();
@@ -237,42 +251,36 @@
 >
   <div class="p-4">
     <h1 style={h1style} class="mb-2">ESP32-S3 Keyboard</h1>
-    <button onclick={clickConnect} disabled={connStatus === "connected"}
-      >Connect</button
-    >
-    <button onclick={clickDisconnect} disabled={connStatus === "disconnected"}
-      >Disconnect</button
-    >
+    <div class="flex gap-2 items-center">
+      {#if connStatus === "connected"}
+        <button onclick={clickDisconnect}>Disconnect</button>
+      {:else if connStatus === "disconnected"}
+        <button onclick={clickConnect}>Connect</button>
+      {/if}
 
-    {#if supportsLock}
-      <button onclick={lockKeyboard}>Lock Keyboard</button>
-      <button onclick={unlockKeyboard}>Unlock Keyboard</button>
-    {/if}
+      {#if supportsLock}
+        {#if connStatus === "connected" && keyboardLocked}
+          <button onclick={unlockKeyboard}>Unlock Keyboard</button>
+        {:else}
+          <button onclick={lockKeyboard}>Lock Keyboard</button>
+        {/if}
+        <!-- <button onclick={lockKeyboard}>Lock Keyboard</button>
+      <button onclick={unlockKeyboard}>Unlock Keyboard</button> -->
+      {/if}
 
-    <div class="pt-2">
-      <input type="checkbox" bind:checked={mouselockOn} id="mouselockOn" />
-      <label for="mouselockOn">Mouse Lock</label>
+      <span>
+        <input type="checkbox" bind:checked={mouselockOn} id="mouselockOn" />
+        <label for="mouselockOn">Mouse Lock</label>
+      </span>
     </div>
 
     <!-- <button onclick={enterPointerlock}>Enter Pointer Lock</button> -->
     <div style="padding-top: 10px; display: flex; gap: 20px;">
       <div>
         <!-- <textarea onkeydown={onKeyDown} onkeyup={onKeyUp}></textarea> -->
-        <button onclick={() => (showExtraButtons = !showExtraButtons)}
-          >Show/hide extra buttons</button
-        >
-        {#if showExtraButtons}
-          <div id="button_div" style="display: block; flex-grow:1;">
-            {#each readyKeycodes as keycode}
-              <button
-                onclick={() => {
-                  console.log(keycode);
-                  sendKeycode(keycode[1]);
-                }}>{keycode[0]}</button
-              >
-            {/each}
-          </div>
-        {/if}
+        <button onclick={() => (showExtraButtons = !showExtraButtons)}>
+          Show/hide extra buttons
+        </button>
       </div>
     </div>
     <div class="term-log">
@@ -283,9 +291,47 @@
       </div>
     </div>
   </div>
+
+  {#if showExtraButtons}
+    <dialog open class="absolute top-0 left-0 w-screen h-screen bg-black/30">
+      <div class="w-screen h-screen flex flex-row justify-center items-center">
+        <div
+          class="max-h-[50vh] max-w-[90vw] bg-white rounded-2xl flex flex-col overflow-clip"
+        >
+          <div
+            class="flex justify-between items-center relative p-2 border-bottom border-b-2 border-gray-50"
+          >
+            <h2 class="ms-2.5 font-bold">Extra buttons</h2>
+            <button
+              onclick={() => {
+                showExtraButtons = false;
+              }}
+            >
+              Close
+            </button>
+          </div>
+          <div class="w-full relative p-2 h-full overflow-y-scroll">
+            <div class="grid grid-cols-6 gap-2">
+              {#each readyKeycodes as [code, keycode]}
+                <button
+                  class="btn-dialog text-sm overflow-hidden py-0 flex justify-center items-center"
+                  onmousedown={() => sendKeycode(keycode, "press")}
+                  onmouseup={() => sendKeycode(keycode, "release")}
+                >
+                  {code}
+                </button>
+              {/each}
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  {/if}
 </main>
 
-<style>
+<style lang="postcss">
+  @import "tailwindcss";
+
   main {
     @apply h-screen w-screen flex justify-center items-center;
   }
@@ -293,18 +339,11 @@
     text-align: left;
   }
   .term-log {
-    /* &::-webkit-scrollbar {
-      display: none;
-    } */
-    @apply overflow-y-scroll;
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    width: 100%;
-    height: 100%;
-    max-width: 500px;
-    max-height: 200px;
-    border: 1px solid black;
-    background: oklch(1 0 100 / 0.6);
+    @apply w-full mt-3;
+    height: 200px;
+
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    overflow-y: scroll;
   }
 </style>
