@@ -1,4 +1,5 @@
 <script lang="ts">
+  import KeycodeModal from "./KeycodeModal.svelte";
   import { KEYCODES, MOUSE_KEYS } from "./keycodes";
   import { usePointerlock } from "@terrygonguet/svelte-pointerlock";
 
@@ -15,7 +16,6 @@
     enter: enterPointerlock,
   } = usePointerlock();
 
-  const readyKeycodes = $derived(Object.entries(KEYCODES));
   let mouselockOn = $state(false);
   let output = $state("");
 
@@ -25,11 +25,6 @@
       "\n" +
       output;
   };
-
-  $effect(() => {
-    // console.log("output changed, scrolling to bottom");
-    // document.getElementById("output")?.scrollTo(0, 1e10);
-  });
 
   let showExtraButtons = $state(false);
   let h1style = $derived(
@@ -264,8 +259,6 @@
         {:else}
           <button onclick={lockKeyboard}>Lock Keyboard</button>
         {/if}
-        <!-- <button onclick={lockKeyboard}>Lock Keyboard</button>
-      <button onclick={unlockKeyboard}>Unlock Keyboard</button> -->
       {/if}
 
       <span>
@@ -274,13 +267,20 @@
       </span>
     </div>
 
-    <!-- <button onclick={enterPointerlock}>Enter Pointer Lock</button> -->
-    <div style="padding-top: 10px; display: flex; gap: 20px;">
+    <div class="flex gap-2 pt-2.5">
       <div>
-        <!-- <textarea onkeydown={onKeyDown} onkeyup={onKeyUp}></textarea> -->
         <button onclick={() => (showExtraButtons = !showExtraButtons)}>
           Show/hide extra buttons
         </button>
+      </div>
+      <div>
+        <esp-web-install-button manifest="/espflash_manifest.json">
+          <button slot="activate"> Flash ESP32-S3 Firmware </button>
+          <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+          <span slot="not-allowed"
+            >Ah snap, you are not allowed to use this on HTTP!</span
+          >
+        </esp-web-install-button>
       </div>
     </div>
     <div class="term-log">
@@ -293,39 +293,7 @@
   </div>
 
   {#if showExtraButtons}
-    <dialog open class="absolute top-0 left-0 w-screen h-screen bg-black/30">
-      <div class="w-screen h-screen flex flex-row justify-center items-center">
-        <div
-          class="max-h-[50vh] max-w-[90vw] bg-white rounded-2xl flex flex-col overflow-clip"
-        >
-          <div
-            class="flex justify-between items-center relative p-2 border-bottom border-b-2 border-gray-50"
-          >
-            <h2 class="ms-2.5 font-bold">Extra buttons</h2>
-            <button
-              onclick={() => {
-                showExtraButtons = false;
-              }}
-            >
-              Close
-            </button>
-          </div>
-          <div class="w-full relative p-2 h-full overflow-y-scroll">
-            <div class="grid grid-cols-6 gap-2">
-              {#each readyKeycodes as [code, keycode]}
-                <button
-                  class="btn-dialog text-sm overflow-hidden py-0 flex justify-center items-center"
-                  onmousedown={() => sendKeycode(keycode, "press")}
-                  onmouseup={() => sendKeycode(keycode, "release")}
-                >
-                  {code}
-                </button>
-              {/each}
-            </div>
-          </div>
-        </div>
-      </div>
-    </dialog>
+    <KeycodeModal {sendKeycode} bind:showExtraButtons />
   {/if}
 </main>
 
