@@ -22,7 +22,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: oklch(24.807% 0.00715 325.606);
+    --background-color: oklch(36.71% 0.0111 42.463);
+    /* oklch(24.807% 0.00715 325.606); */
     --foreground-color: oklch(82.957% 0.02095 40.317);
     --button-background-color: oklch(from var(--background-color) calc(0.3 * 0.01) c h / 0.1);
     --border-color: oklch(from var(--background-color) calc(0.2 * 0.01) c h / 0.1);
