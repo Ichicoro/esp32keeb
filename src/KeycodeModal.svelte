@@ -8,10 +8,10 @@
 <dialog open class="absolute top-0 left-0 w-screen h-screen bg-black/30">
   <div class="w-screen h-screen flex flex-row justify-center items-center">
     <div
-      class="max-h-[50vh] max-w-[90vw] bg-white rounded-2xl flex flex-col overflow-clip"
+      class="max-h-[50vh] max-w-[90vw] rounded-2xl flex flex-col overflow-clip"
     >
       <div
-        class="flex justify-between items-center relative p-2 border-bottom border-b-2 border-gray-50"
+        class="flex justify-between items-center relative p-2 border-bottom border-b-2 border-black/10"
       >
         <h2 class="ms-2.5 font-bold">Extra buttons</h2>
         <button

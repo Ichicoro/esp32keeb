@@ -5,32 +5,43 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --background-color: oklch(92.525% 0.00602 42.594);
+  --foreground-color: oklch(36.71% 0.0111 42.463);
+  --button-background-color: oklch(from var(--background-color) calc(0.3 * 0.00602) c h / 0.1);
+  --border-color: oklch(from var(--background-color) calc(0.2 * 0.00602) c h / 0.1);
+  --button-hover-color: oklch(from var(--background-color) calc(0.2 * 0.00602) c h / 0.15);
 
-  /* font-synthesis: none; */
+  color-scheme: light dark;
+  /* color: rgba(255, 255, 255, 0.87); */
+  /* background-color: #242424; */
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #213547;
-  text-decoration: inherit;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: oklch(24.807% 0.00715 325.606);
+    --foreground-color: oklch(82.957% 0.02095 40.317);
+    --button-background-color: oklch(from var(--background-color) calc(0.3 * 0.01) c h / 0.1);
+    --border-color: oklch(from var(--background-color) calc(0.2 * 0.01) c h / 0.1);
+  }
 }
 
-a:hover {
-  color: #213547;
+dialog {
+  backdrop-filter: blur(10px);
+
+  &>div>div {
+    background-color: var(--background-color);
+  }
 }
+
 
 body {
-  background-color: #eae5e3;
-  color: #213547;
-  margin: 0;
-  display: flex;
-  place-items: center;
+  @apply flex place-items-center m-0;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
   min-width: 320px;
   min-height: 100vh;
 }
@@ -44,45 +55,18 @@ h1 {
   padding: 2em;
 }
 
-/* #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-} */
-
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  @apply border-[1.5px] border-dashed rounded-lg px-3 py-2 cursor-pointer font-[550];
+  border-color: var(--border-color);
+  background-color: var(--button-background-color);
+  transition: background-color 0.25s, border-style 0.5s;
+
+  &:hover {
+    background-color: var(--button-hover-color);
+    /* border-style: dotted; */
+  }
 }
 
-button:hover {
-  border-color: #213547;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #213547;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+div[slot="headline"] {
+  font-family: "Space Grotesk";
 }

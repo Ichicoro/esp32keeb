@@ -245,7 +245,7 @@
   onmouseup={onMouseUp}
 >
   <div class="p-4">
-    <h1 style={h1style} class="mb-2">ESP32-S3 Keyboard</h1>
+    <h1 style={h1style} class="mb-2 font-medium">ESP32Keeb</h1>
     <div class="flex gap-2 items-center">
       {#if connStatus === "connected"}
         <button onclick={clickDisconnect}>Disconnect</button>
