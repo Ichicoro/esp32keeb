@@ -245,7 +245,19 @@
   onmouseup={onMouseUp}
 >
   <div class="p-4">
-    <h1 style={h1style} class="mb-2 font-medium">ESP32Keeb</h1>
+    <h1 style={h1style} class="mb-2 font-medium flex justify-content gap-2">
+      <img
+        src="esp32keeb.svg"
+        alt="esp32keeb logo"
+        class="inline dark:hidden"
+        width="40px"
+      /><img
+        src="esp32keeb-dark.svg"
+        alt="esp32keeb logo"
+        class="dark:inline hidden"
+        width="40px"
+      /> ESP32Keeb
+    </h1>
     <div class="flex gap-2 items-center">
       {#if connStatus === "connected"}
         <button onclick={clickDisconnect}>Disconnect</button>
