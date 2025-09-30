@@ -12,8 +12,6 @@
   --button-hover-color: oklch(from var(--background-color) calc(0.2 * 0.00602) c h / 0.15);
 
   color-scheme: light dark;
-  /* color: rgba(255, 255, 255, 0.87); */
-  /* background-color: #242424; */
 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -27,14 +25,6 @@
     --foreground-color: oklch(82.957% 0.02095 40.317);
     --button-background-color: oklch(from var(--background-color) calc(0.3 * 0.01) c h / 0.1);
     --border-color: oklch(from var(--background-color) calc(0.2 * 0.01) c h / 0.1);
-  }
-}
-
-dialog {
-  backdrop-filter: blur(10px);
-
-  &>div>div {
-    background-color: var(--background-color);
   }
 }
 

@@ -244,18 +244,16 @@
   onmousedown={onMouseDown}
   onmouseup={onMouseUp}
 >
-  <div class="p-4">
-    <h1 style={h1style} class="mb-2 font-medium flex justify-content gap-2">
+  <div class="p-4 max-w-[510px] w-full">
+    <h1 style={h1style} class="mb-2 font-medium flex items-center gap-2">
       <img
         src="esp32keeb.svg"
         alt="esp32keeb logo"
-        class="inline dark:hidden"
-        width="40px"
+        class="inline dark:hidden h-10"
       /><img
         src="esp32keeb-dark.svg"
         alt="esp32keeb logo"
-        class="dark:inline hidden"
-        width="40px"
+        class="dark:inline hidden h-10"
       /> ESP32Keeb
     </h1>
     <div class="flex gap-2 items-center">
@@ -311,6 +309,12 @@
 
 <style lang="postcss">
   @import "tailwindcss";
+
+  @media (height <= 402px) {
+    main {
+      align-items: start !important;
+    }
+  }
 
   main {
     @apply h-screen w-screen flex justify-center items-center;

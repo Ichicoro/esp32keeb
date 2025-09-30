@@ -5,10 +5,10 @@
   const readyKeycodes = $derived(Object.entries(KEYCODES));
 </script>
 
-<dialog open class="absolute top-0 left-0 w-screen h-screen bg-black/30">
-  <div class="w-screen h-screen flex flex-row justify-center items-center">
+<dialog open class="absolute top-0 left-0 w-screen h-screen bg-black/50">
+  <div class="w-screen h-screen flex flex-row justify-center items-center p-4">
     <div
-      class="max-h-[50vh] max-w-[90vw] rounded-2xl flex flex-col overflow-clip"
+      class="max-h-[50vh] max-w-3xl w-full rounded-2xl flex flex-col overflow-clip bg-[var(--background-color)]"
     >
       <div
         class="flex justify-between items-center relative p-2 border-bottom border-b-2 border-black/10"
